@@ -1,13 +1,13 @@
 services:
 
-    zabbix_postgres:
+    postgres:
         container_name: zabbix_postgres
         user: "${DOCKER_POSTGRES_UID}:${DOCKER_POSTGRES_GID}"
         build:
             context: .
             dockerfile: ./docker/postgres/Dockerfile
         ports:
-            - "127.0.0.1:5432:5432"
+            - "5432:5432"
         env_file:
             - .env
         environment:
@@ -23,13 +23,14 @@ services:
             zabbix_network:
                 ipv4_address: 172.20.0.2
 
-    zabbix_server:
-        user: "${DOCKER_LINUX_UID}:${DOCKER_LINUX_GID}"
+    server:
+        container_name: zabbix_server
+        user: zabbix
         build:
             context: .
             dockerfile: ./docker/zabbix-server/Dockerfile
         ports:
-            - "127.0.0.1:10051:10051"
+            - "10051:10051"
         env_file:
             - .env
         restart: always
