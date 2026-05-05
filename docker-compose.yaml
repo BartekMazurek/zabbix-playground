@@ -44,9 +44,34 @@ services:
             zabbix_network:
                 ipv4_address: 172.20.0.3
 
+    web:
+        container_name: zabbix_web
+        user: zabbix
+        build:
+            context: .
+            dockerfile: ./docker/zabbix-web/Dockerfile
+        ports:
+            - "80:8080"
+        env_file:
+            - .env
+        depends_on:
+            - server
+            - postgres
+        restart: always
+        cap_drop:
+            - ALL
+        security_opt:
+            - no-new-privileges:true
+        networks:
+            zabbix_network:
+                ipv4_address: 172.20.0.4
+            main_network:
+
 networks:
     zabbix_network:
         driver: bridge
+        internal: true
         ipam:
             config:
                 -   subnet: 172.20.0.0/24
+    main_network:
