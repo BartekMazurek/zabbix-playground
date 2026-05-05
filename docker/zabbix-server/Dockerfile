@@ -1,1 +1,1 @@
-FROM zabbix/zabbix-server-pgsql
+FROM zabbix/zabbix-server-pgsql:latest
