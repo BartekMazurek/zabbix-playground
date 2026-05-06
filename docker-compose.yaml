@@ -1,6 +1,7 @@
 services:
 
     postgres:
+        hostname: zabbix-postgres
         container_name: zabbix_postgres
         user: "${DOCKER_POSTGRES_UID}:${DOCKER_POSTGRES_GID}"
         build:
@@ -24,6 +25,7 @@ services:
                 ipv4_address: 172.20.0.2
 
     server:
+        hostname: zabbix-server
         container_name: zabbix_server
         user: zabbix
         build:
@@ -44,7 +46,32 @@ services:
             zabbix_network:
                 ipv4_address: 172.20.0.3
 
+    agent:
+        hostname: zabbix-agent
+        container_name: zabbix_agent
+        user: zabbix
+        build:
+            context: .
+            dockerfile: ./docker/zabbix-agent/Dockerfile
+        env_file:
+            - .env
+#        pid: host
+#        volumes:
+#            - /:/host/rootfs:ro
+#            - /proc:/host/proc:ro
+#            - /sys:/host/sys:ro
+        ports:
+            - "10050:10050"
+        security_opt:
+            - no-new-privileges:true
+        cap_drop:
+            - ALL
+        networks:
+            zabbix_network:
+                ipv4_address: 172.20.0.4
+
     web:
+        hostname: zabbix-web
         container_name: zabbix_web
         user: zabbix
         build:
@@ -55,6 +82,7 @@ services:
         env_file:
             - .env
         depends_on:
+            - agent
             - server
             - postgres
         restart: always
@@ -64,7 +92,7 @@ services:
             - no-new-privileges:true
         networks:
             zabbix_network:
-                ipv4_address: 172.20.0.4
+                ipv4_address: 172.20.0.5
             main_network:
 
 networks:
