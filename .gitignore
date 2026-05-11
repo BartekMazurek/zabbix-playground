@@ -1,1 +1,6 @@
 .idea
+/ssl/web/*.crt
+/ssl/web/*.csr
+/ssl/web/*.key
+/ssl/web/*.srl
+/ssl/web/*.pem
