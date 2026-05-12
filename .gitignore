@@ -4,3 +4,4 @@
 /ssl/web/*.key
 /ssl/web/*.srl
 /ssl/web/*.pem
+/ssl/agent/*.psk
