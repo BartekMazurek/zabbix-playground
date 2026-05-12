@@ -1,8 +1,8 @@
 FROM zabbix/zabbix-web-nginx-pgsql:latest
 
-RUN apk update -y && apk upgrade -y
-
 USER root
+
+RUN apk update && apk upgrade
 
 COPY ./ssl/web/ssl.crt /etc/ssl/nginx/ssl.crt
 COPY ./ssl/web/ssl.key /etc/ssl/nginx/ssl.key
