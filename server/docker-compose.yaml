@@ -7,8 +7,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/postgres/Dockerfile
-#        ports:
-#            - "5432:5432"
         env_file:
             - .env
         environment:
@@ -21,8 +19,7 @@ services:
         security_opt:
             - no-new-privileges:true
         networks:
-            zabbix_network:
-                ipv4_address: 172.20.0.2
+            - zabbix-inet
 
     server:
         hostname: zabbix-server
@@ -31,8 +28,8 @@ services:
         build:
             context: .
             dockerfile: ./docker/zabbix-server/Dockerfile
-#        ports:
-#            - "10051:10051"
+        ports:
+            - "10051:10051"
         env_file:
             - .env
         restart: always
@@ -43,32 +40,8 @@ services:
         security_opt:
             - no-new-privileges:true
         networks:
-            zabbix_network:
-                ipv4_address: 172.20.0.3
-
-    agent:
-        hostname: zabbix-agent
-        container_name: zabbix_agent
-        user: zabbix
-        build:
-            context: .
-            dockerfile: ./docker/zabbix-agent/Dockerfile
-        env_file:
-            - .env
-#        pid: host
-#        volumes:
-#            - /:/host/rootfs:ro
-#            - /proc:/host/proc:ro
-#            - /sys:/host/sys:ro
-#        ports:
-#            - "10050:10050"
-        security_opt:
-            - no-new-privileges:true
-        cap_drop:
-            - ALL
-        networks:
-            zabbix_network:
-                ipv4_address: 172.20.0.4
+            - zabbix-net
+            - zabbix-inet
 
     web:
         hostname: zabbix-web
@@ -78,12 +51,10 @@ services:
             context: .
             dockerfile: ./docker/zabbix-web/Dockerfile
         ports:
-#            - "8080:8080"
             - "8443:8443"
         env_file:
             - .env
         depends_on:
-            - agent
             - server
             - postgres
         restart: always
@@ -92,15 +63,12 @@ services:
         security_opt:
             - no-new-privileges:true
         networks:
-            zabbix_network:
-                ipv4_address: 172.20.0.5
-            main_network:
+            - zabbix-net
+            - zabbix-inet
 
 networks:
-    zabbix_network:
+    zabbix-inet:
         driver: bridge
         internal: true
-        ipam:
-            config:
-                -   subnet: 172.20.0.0/24
-    main_network:
+    zabbix-net:
+        external: true

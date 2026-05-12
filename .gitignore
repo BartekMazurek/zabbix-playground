@@ -1,7 +1,7 @@
 .idea
-/ssl/web/*.crt
-/ssl/web/*.csr
-/ssl/web/*.key
-/ssl/web/*.srl
-/ssl/web/*.pem
-/ssl/agent/*.psk
+/server/ssl/web/*.crt
+/server/ssl/web/*.csr
+/server/ssl/web/*.key
+/server/ssl/web/*.srl
+/server/ssl/web/*.pem
+/agent/ssl/agent/*.psk

@@ -1,0 +1,28 @@
+services:
+
+    agent:
+        hostname: zabbix-agent
+        container_name: zabbix_agent
+        user: zabbix
+        build:
+            context: .
+            dockerfile: ./docker/zabbix-agent/Dockerfile
+        env_file:
+            - .env
+#        pid: host
+#        volumes:
+#            - /:/host/rootfs:ro
+#            - /proc:/host/proc:ro
+#            - /sys:/host/sys:ro
+        ports:
+            - "10050:10050"
+        security_opt:
+            - no-new-privileges:true
+        cap_drop:
+            - ALL
+        networks:
+            - zabbix-net
+
+networks:
+    zabbix-net:
+        external: true

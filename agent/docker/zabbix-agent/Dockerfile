@@ -1,5 +1,7 @@
 FROM zabbix/zabbix-agent:latest
 
+RUN apk update -y && apk upgrade -y
+
 USER root
 
 COPY ./ssl/agent/zabbix_agent.psk /var/lib/zabbix/enc/zabbix_agent.psk
